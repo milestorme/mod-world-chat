@@ -8,6 +8,7 @@
 */
 
 #include "ScriptMgr.h"
+#include "Player.h"
 #include "Log.h"
 #include "Chat.h"
 #include "Common.h"
@@ -17,7 +18,7 @@
 #include <unordered_map>
 
 /* VERSION */
-float ver = 1.0f;
+float ver = 2.0f;
 
 /* Colors */
 std::string WORLD_CHAT_ALLIANCE_BLUE = "|cff3399FF";
@@ -46,16 +47,23 @@ std::string world_chat_ClassColor[11] =
 };
 
 /* Ranks */
-std::string world_chat_GM_RANKS[4] =
+std::string world_chat_GM_RANKS[10] =
 {
     "Player",
-    "MOD",
-    "GM",
-    "ADMIN",
+    "|cff3598DBTrial|r",
+    "|cff2ECC6FGameMaster|r",
+    "|cff11806CHead GameMaster|r",
+    "|cffE57E21Developer|r",
+    "|cffA84300Head Developer|r",
+    "|cff5A4CFCAdministrator|r",
+    "|cffA30001Head Administrator|r",
+    "|cff9B59B5Co-Owner|r",
+    "|cffFE0400Owner|r"
 };
 
 /* BLIZZARD CHAT ICON FOR GM'S */
-std::string world_chat_GMIcon = "|TINTERFACE/CHATFRAME/UI-CHATICON-BLIZZ:13:13:0:-1|t";
+std::string world_chat_GMIcon = "|TInterface\\ChatFrame\\UI-ChatIcon-Blizz:12:20:0:0:32:16:4:28:0:16|t";
+
 
 /* COLORED TEXT FOR CURRENT FACTION || NOT FOR GMS */
 std::string world_chat_TeamIcon[2] =
@@ -127,15 +135,15 @@ public:
             if (!itr->second)
                 continue;
 
-
-            Player* target = itr->second->GetPlayer();
+            WorldSession* session = itr->second;
+            Player* target = session->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
             if (WorldChat[guid2].chat == 1)
             {
                 if (sConfigMgr->GetBoolDefault("World_Chat.CrossFactions", true)) {
-                    if (player->IsGameMaster()) {
-                        snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                    if (player->IsGameMaster() || player->isGMChat()) {
+                        snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                     }
                     else
                         snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
@@ -145,16 +153,16 @@ public:
                 {
                     if (player->GetTeamId() == target->GetTeamId())
                     {
-                        if (player->IsGameMaster()) {
-                            snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                        if (player->IsGameMaster() || player->isGMChat()) {
+                            snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         ChatHandler(target->GetSession()).PSendSysMessage("%s", message);
                     }
                     else if (target->IsGameMaster()) {
-                        if (player->IsGameMaster()) {
-                            snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                        if (player->IsGameMaster() || player->isGMChat()) {
+                            snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
@@ -197,13 +205,13 @@ public:
             if (!itr->second)
                 continue;
 
-
-            Player* target = itr->second->GetPlayer();
+            WorldSession* session = itr->second;
+            Player* target = session->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
             if (WorldChat[guid2].chat == 1 && (target->GetTeamId() == TEAM_HORDE || WorldChat[guid2].chat == 1) && target->IsGameMaster())
             {
-                snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage("%s", message);
             }
         }
@@ -217,7 +225,7 @@ public:
         if (!sConfigMgr->GetBoolDefault("World_Chat.Enable", true)) {
             Player* player = pChat->GetSession()->GetPlayer();
             ChatHandler(pChat->GetSession()).PSendSysMessage("[WC] %sWorld Chat System is disabled.|r", WORLD_CHAT_RED.c_str());
-            return true;
+            return false;
         }
 
         if (!*msg)
@@ -228,7 +236,7 @@ public:
 
         if (!WorldChat[guid].chat) {
             ChatHandler(player->GetSession()).PSendSysMessage("[WC] %sWorld Chat is disabled. (.chat)|r", WORLD_CHAT_RED.c_str());
-            return true;
+            return false;
         }
 
         char message[1024];
@@ -242,17 +250,18 @@ public:
                 continue;
 
 
-            Player* target = itr->second->GetPlayer();
+            WorldSession* session = itr->second;
+            Player* target = session->GetPlayer();
             uint32 guid2 = target->GetGUID();
 
             if (WorldChat[guid2].chat == 1 && (target->GetTeamId() == TEAM_ALLIANCE || WorldChat[guid2].chat == 1) && target->IsGameMaster())
             {
-                snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage("%s",message);
             }
         }
 
-        return true;
+        return false;
     }
 
     static bool HandleWorldChatOnCommand(ChatHandler* handler, const char* msg)
