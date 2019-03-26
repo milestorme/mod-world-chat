@@ -135,6 +135,12 @@ public:
         {
             if (!itr->second)
                 continue;
+            if (!itr->second->GetPlayer()){
+                continue;
+            }
+            if(!itr->second->GetPlayer()->IsInWorld()){
+                continue;
+            }
 
             WorldSession* session = itr->second;
             Player* target = session->GetPlayer();
@@ -144,7 +150,7 @@ public:
             {
                 if (sConfigMgr->GetBoolDefault("World_Chat.CrossFactions", true)) {
                     if (player->IsGameMaster() || player->isGMChat()) {
-                        snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                        snprintf(message, 1024, "[%s][%s%s|r]: %s%s|r", world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                     }
                     else
                         snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
@@ -155,7 +161,7 @@ public:
                     if (player->GetTeamId() == target->GetTeamId())
                     {
                         if (player->IsGameMaster() || player->isGMChat()) {
-                            snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                            snprintf(message, 1024, "[%s][%s%s|r]: %s%s|r", world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
@@ -163,7 +169,7 @@ public:
                     }
                     else if (target->IsGameMaster()) {
                         if (player->IsGameMaster() || player->isGMChat()) {
-                            snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                            snprintf(message, 1024, "[%s][%s%s|r]: %s%s|r", world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                         }
                         else
                             snprintf(message, 1024, "[World][%s][%s%s|r]: %s%s|r", world_chat_TeamIcon[player->GetTeamId()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
@@ -206,6 +212,12 @@ public:
         {
             if (!itr->second)
                 continue;
+            if (!itr->second->GetPlayer()){
+                continue;
+            }
+            if(!itr->second->GetPlayer()->IsInWorld()){
+                continue;
+            }
 
             WorldSession* session = itr->second;
             Player* target = session->GetPlayer();
@@ -213,7 +225,7 @@ public:
 
             if (WorldChat[guid2].chat == 1 && (target->GetTeamId() == TEAM_HORDE || WorldChat[guid2].chat == 1) && target->IsGameMaster())
             {
-                snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                snprintf(message, 1024, "[%s][%s%s|r]: %s%s|r", world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage("%s", message);
             }
         }
@@ -252,6 +264,13 @@ public:
             if (!itr->second)
                 continue;
 
+            if (!itr->second->GetPlayer()){
+                continue;
+            }
+            if(!itr->second->GetPlayer()->IsInWorld()){
+                continue;
+            }
+
 
             WorldSession* session = itr->second;
             Player* target = session->GetPlayer();
@@ -259,7 +278,7 @@ public:
 
             if (WorldChat[guid2].chat == 1 && (target->GetTeamId() == TEAM_ALLIANCE || WorldChat[guid2].chat == 1) && target->IsGameMaster())
             {
-                snprintf(message, 1024, "%s[%s][%s%s|r]: %s%s|r", world_chat_GMIcon.c_str(), world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
+                snprintf(message, 1024, "[%s][%s%s|r]: %s%s|r", world_chat_GM_RANKS[sender_session->GetSecurity()].c_str(), world_chat_ClassColor[player->getClass() - 1].c_str(), player->GetName().c_str(), WORLD_CHAT_WHITE.c_str(), msg);
                 ChatHandler(target->GetSession()).PSendSysMessage("%s",message);
             }
         }
