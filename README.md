@@ -1,11 +1,21 @@
 # ![logo](https://raw.githubusercontent.com/azerothcore/azerothcore.github.io/master/images/logo-github.png) AzerothCore
-- Latest build status with azerothcore: [![Build Status](https://travis-ci.org/azerothcore/mod-world-chat.svg?branch=master)](https://travis-ci.org/azerothcore/mod-world-chat)
-# World Chat
+## World Chat
+- Latest build status with azerothcore: [![Build Status](https://github.com/azerothcore/mod-world-chat/workflows/core-build/badge.svg?branch=master&event=push)](https://github.com/azerothcore/mod-world-chat)
 
 # Description
-World Chat Module enables you to talk globally with your faction or with both factions (if enabled by server).
+World Chat Module is a simple global ( faction or cross-faction ) chat for AzerothCore.
 
-The GM can see both factions messages if he has the chat active and gm mode on. (.gm on)
+# Functionality
+* How to chat?
+    - .chat Message - This works for everyone, GM and players.
+    - /join World and talk as in a normal chat ( This name is subject of change based on the config file )
+
+* How a GM can send a message to the other faction chat if cross-faction is disabled?
+    - Use .chat command followed by the initial of the faction ( Example: For horde use .chath <Message> )
+    
+* How can i show or hide by gm status?
+    - You can show your GM or DEV status by having .gm chat on and .gm on. Also you can be shown as a DEV if you have .dev on
+
 # Commands
 List of fully functional commands:
 * .chat <$TEXT>
@@ -38,14 +48,13 @@ git clone https://github.com/wizzymore/mod_world_chat.git
 
 ## Database Setup
 ### Setting up commands
-```sql
-DELETE FROM `command` WHERE name IN ('chata', 'chath', 'chat');
+Open DB-Assembler and use the option 8) Import-customs
 
-INSERT INTO `command` (`name`, `security`, `help`) VALUES 
-('chata', 1, 'Syntax: .chata $text - To speak as a GM only to Alliance'),
-('chath', 1, 'Syntax: .chath $text - To speak as a GM only to Horde'),
-('chat', 0, 'Syntax: .chat $text\n.chat on To show World Chat\n.chat off To hide World Chat');
-```
+OR
+
+Run the following sql file in your database: [this](/sql/world/command.sql)
+
+
 
 ## Server Config Setup
 ### On Windows
